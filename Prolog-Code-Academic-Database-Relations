@@ -1,0 +1,114 @@
+% CS303 Homework-2
+% Tuğba Karalar Enginel - 200202002
+
+% Facts:
+
+instructor(jane). instructor(tom).
+instructor(john). instructor(kelly).
+student(christy). student(angelica).
+student(hans). student(annabel).
+student(jerry). student(kristin).
+student(bill).
+course(cs, cs303). course(cs, cs441). course(cs, cs102).
+course(cs, cs104). course(ee, ee441). course(ee, ee331).
+course(ee, ee202). course(ee, cs332). course(ee, ee432).
+course(ie, ie132). course(ie, ie262). course(ie, ie492).
+teach(jane, cs303). teach(jane, cs441).
+teach(jane, cs102). teach(tom, ee441).
+teach(tom, ee331). teach(tom, ee202).
+teach(john, cs104). teach(john, cs332).
+teach(john, ee432). teach(kelly, ie132).
+teach(kelly, ie262). teach(kelly, ie492).
+enrolled(christy,cs303). enrolled(christy,cs441).
+enrolled(christy,cs332). enrolled(angelica,ee202).
+enrolled(angelica,ee432). enrolled(angelica,ee441).
+enrolled(hans,ie132). enrolled(hans, ie262).
+enrolled(hans, ie492). enrolled(annabel, cs303).
+enrolled(annabel, cs332). enrolled(annabel,cs441).
+enrolled(jerry,ee202). enrolled(jerry,ee432).
+enrolled(jerry,ee331). enrolled(kristin,cs332).
+enrolled(kristin, cs441). enrolled(kristin, ee441).
+enrolled(bill,cs102). enrolled(bill,cs104).
+enrolled(bill,cs332).
+
+% Rules
+
+coursesTaught(X,Y) :- instructor(X), course(Z, Y), teach(X,Y).
+coursesTaken(X,Y) :- student(X), course(Z, Y), enrolled(X,Y).
+department(X,Y) :- (coursesTaken(X,Z);coursesTaught(X,Z)), course(Y,Z).
+studentOf(X,Y) :-  coursesTaken(X,Z), teach(Y,Z).
+instructorOf(X,Y) :- coursesTaught(X,Z), enrolled(Y,Z).
+
+
+/* Queries and Answers:
+
+?- coursesTaken(bill,Y)
+cs102
+cs104
+cs332
+
+?- coursesTaken(bill,cs102)
+true
+
+?- department(jerry,Y)
+ee
+
+?- department(jane,cs)
+true
+
+?- coursesTaught(john,Y)
+cs104
+cs332
+ee432
+
+?- coursesTaught(john,cs441)
+false
+
+?- studentOf(christy,jane)
+true
+
+?- studentOf(christy,Y)
+jane
+jane
+john
+
+?- instructorOf(kelly,Y)
+hans
+hans
+hans
+
+?- instructorOf(tom,Y)
+angelica
+kristin
+jerry
+angelica
+jerry
+
+?- instructorOf(tom,bill)
+false
+
+?- instructorOf(M,Y)
+
+M	   Y
+jane	christy
+jane	annabel
+jane	christy
+jane	annabel
+jane	kristin
+jane	bill
+tom	angelica
+tom	kristin
+tom	jerry
+tom	angelica
+tom	jerry
+john	bill
+john	christy
+john	annabel
+john	kristin
+john	bill
+john	angelica
+john	jerry
+kelly	hans
+kelly	hans
+kelly	hans
+*/
